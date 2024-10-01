@@ -7,29 +7,27 @@ const createUser = async (req, res) => {
     try {
         const { name, password, email, solicitado, cpf } = req.body;
 
-        const passwdCrypt = await bcrypt.hash(password, 5);
+        const passwdCrypt = await bcrypt.hash(password, 7);
 
         const newUser = await User.create({
             name,
-            cpf,
             email,
             password: passwdCrypt,
-            agente: false,
-            solicitado,
+            cpf,
+            solicitado: solicitado || false
         });
 
         res.status(201).json({ user: newUser, msg: 'Usuário criado!' });
         console.log('Usuário criado com sucesso!');
     } catch (error) {
         console.log(`Erro ao cadastrar: ${error}`);
-        return res.status(400).json("Erro ao cadastrar usuário!"); // Código de erro 400 para requisição inválida
+        return res.status(400).json("Erro ao cadastrar usuário!");
     }
 };
 
 const findAllUsers = async (req, res) => {
     try {
         const users = await User.find({ solicitado: true });
-
         res.status(200).json({ users, msg: 'Usuários buscados!' });
         console.log('Usuários buscados com sucesso!');
     } catch (error) {
@@ -40,8 +38,8 @@ const findAllUsers = async (req, res) => {
 
 const updatedUser = async (req, res) => {
     try {
-        const { agente, email } = req.body;
-        
+        const { email, agente } = req.body;
+
         const result = await User.updateOne(
             { email: email },
             { $set: { agente: agente } }
@@ -55,9 +53,10 @@ const updatedUser = async (req, res) => {
         }
     } catch (error) {
         console.log(`Erro ao atualizar: ${error}`);
-        return res.status(500).json("Erro ao atualizar usuário para agente!"); // Código de erro 500 para erro no servidor
+        return res.status(500).json({ message: "Erro ao atualizar usuário para agente!" });
     }
 };
+
 
 const authenticatedUser = async (req, res) => {
     try {

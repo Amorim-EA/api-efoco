@@ -11,10 +11,6 @@ app.use(express.json());
 const { expressjwt: expressJWT } = require('express-jwt');
 const cookieParser = require('cookie-parser');
 
-//Token
-const { expressjwt: expressJWT } = require('express-jwt');
-const cookieParser = require('cookie-parser');
-
 app.use(cookieParser());
 
 app.use(
