@@ -1,0 +1,7 @@
+npm init -y
+npm i express mongoose cors
+npm i -D nodemon
+npm i mongodb
+npm i dotenv 
+
+https://mongoosejs.com/docs/guide.html
