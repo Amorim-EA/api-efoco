@@ -17,17 +17,20 @@ const userSchema = new Schema({
   },
   cpf: { 
     type: String, 
-    required: true 
+    required: true,
+    unique: true 
   },
-  agente: { 
+  type: { 
     type: Boolean, 
-    default: false 
+    default: 'cidadao'
   },
-  solicitado: { 
+  solicited: { 
     type: Boolean, 
     default: false 
   }
-});
+}, 
+  { timestamps: true }
+);
 
 const User = mongoose.model("User", userSchema);
 module.exports = User;

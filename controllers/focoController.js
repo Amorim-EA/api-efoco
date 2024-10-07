@@ -3,16 +3,15 @@ const FocoModel = require("../model/Foco");
 // Verificar como funcionara o upload ou/e como pegar a imagem...
 const createFoco = async (req, res) => {
   try {
-    const file = req.file;
-
     const foco = {
       description: req.body.description,
       localization: {
         longitude: req.body.longitude,
         latitude: req.body.latitude
       },
-      // ???
-       image: file.path
+       image: req.imageUri.body,
+       cidadao: req.cidadao.body,
+       status: req.status.body
     };
     
     const response = await FocoModel.create(foco);
@@ -77,11 +76,13 @@ const deleteFoco = async (req, res) => {
 const updateFoco = async (req, res) => {
   try {
     const id = req.params.id;
+    const { description, acao, status, agente } = req.body
 
     const foco = {
-      // atributos
-      name: req.body.name
-    
+      description: description,
+      acao: acao,
+      status: status,
+      agente: agente,
     }
     
     const updatedFoco = await FocoModel.findByIdAndUpdate(

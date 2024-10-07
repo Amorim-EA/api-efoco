@@ -25,7 +25,24 @@ const focoSchema = new Schema({
       }
     }
   ],
-});
+  cidadao: {
+    type: String,
+    required: true
+  },
+  agente: {
+    type: String,
+    required: true
+  }, 
+  status: {
+   type: String,
+   required: true
+  },
+  acao: {
+    type: String,
+    required: true
+  }
+},{ timestamps: true }
+);
 
 const Foco = mongoose.model("Foco", focoSchema);
 module.exports = Foco;

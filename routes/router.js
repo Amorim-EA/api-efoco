@@ -1,13 +1,13 @@
 const express = require("express");
-const routes = express.Router()
+const routes = express.Router();
 
 // Foco router
 const focosRouter = require("./focos");
 routes.use("/", focosRouter);
 
-//User Router
-const userRouter = require("./user");
+// User router
+const userRouter = require("./users");
 routes.use("/", userRouter);
 
-module.exports = routes;
+module.exports = routes
 

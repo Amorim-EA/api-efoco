@@ -7,9 +7,9 @@ npm i dotenv
 https://mongoosejs.com/docs/guide.html
 
 {
-    "name": "João Silva",
-    "email": "joao.silva@email.com",
-    "password": "minhasenha123",
-    "cpf": "123.456.789-00",
-    "solicitado": true
+    "name": "Administrador",
+    "email": "emfoco.dengue@gmail.com",
+    "password": "@PwDadm",
+    "cpf": "000.000.000-00",
+    "solicitado": false
 }

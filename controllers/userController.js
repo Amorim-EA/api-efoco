@@ -5,18 +5,17 @@ const bcrypt = require('bcryptjs');
 
 const createUser = async (req, res) => {
     try {
-        const { name, password, email, solicitado, cpf } = req.body;
+        const { name, password, email, solicited, cpf } = req.body;
 
         const passwdCrypt = await bcrypt.hash(password, 7);
-
-        const newUser = await User.create({
-            name,
-            email,
-            password: passwdCrypt,
-            cpf,
-            solicitado: solicitado || false
-        });
-
+        const newUser = {
+             name: name,
+             email: email,
+             password: passwdCrypt,
+             cpf: cpf,
+             solicited: solicited || false
+          };
+        const addUser = await User.create(newUser);
         res.status(201).json({ user: newUser, msg: 'Usuário criado!' });
         console.log('Usuário criado com sucesso!');
     } catch (error) {
@@ -25,10 +24,10 @@ const createUser = async (req, res) => {
     }
 };
 
-const findAllUsers = async (req, res) => {
+const requestAgent = async (req, res) => {
     try {
-        const users = await User.find({ solicitado: true });
-        res.status(200).json({ users, msg: 'Usuários buscados!' });
+        const users = await User.find({ solicitado: true, type: 'cidadao' });
+        res.status(200).json({ users });
         console.log('Usuários buscados com sucesso!');
     } catch (error) {
         console.log(`Erro ao buscar: ${error}`);
@@ -36,21 +35,17 @@ const findAllUsers = async (req, res) => {
     }
 };
 
-const updatedUser = async (req, res) => {
+const changeToAgent = async (req, res) => {
     try {
-        const { email, agente } = req.body;
+        const { email } = req.body;
 
         const result = await User.updateOne(
             { email: email },
-            { $set: { agente: agente } }
+            { type: 'agente' }
         );
+        res.status(200).json({ msg: 'Usuário atualizado para agente!' });
+        console.log('Usuário atualizado com sucesso!');
 
-        if (result.nModified > 0) {
-            res.status(200).json({ msg: 'Usuário atualizado para agente!' });
-            console.log('Usuário atualizado com sucesso!');
-        } else {
-            res.status(404).json({ msg: 'Usuário não encontrado ou já atualizado!' });
-        }
     } catch (error) {
         console.log(`Erro ao atualizar: ${error}`);
         return res.status(500).json({ message: "Erro ao atualizar usuário para agente!" });
@@ -86,4 +81,4 @@ const authenticatedUser = async (req, res) => {
     }
 };
 
-module.exports = { createUser, findAllUsers, updatedUser, authenticatedUser };
+module.exports = { createUser, requestAgent, changeToAgent, authenticatedUser };
