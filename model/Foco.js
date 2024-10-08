@@ -7,11 +7,11 @@ const focoSchema = new Schema({
     required: true,
   },
   longitude: { 
-    type: String, // coordenadas numéricas?
+    type: Number, // coordenadas numéricas?
     required: true,
   },
   latitude: { 
-    type: String, // coordenadas numéricas?
+    type: Number, // coordenadas numéricas?
     required: true,
   },
   image: {
@@ -28,9 +28,11 @@ const focoSchema = new Schema({
   },
   agente: { 
     type: String,
+    default: '',
   },
   acao: { 
     type: String,
+    default: '',
   }
 }, { timestamps: true });
 
