@@ -1,38 +1,32 @@
 const FocoModel = require("../model/Foco");
-const path = require('path')
 
 const createFoco = async (req, res) => {
   try {
     const { description, longitude, latitude, cidadao } = req.body;
-    const file = req.file;
-    const image = file.path;
+    const imageFile = req.file ? req.file.filename : null;
 
     console.log(image, description, longitude, latitude, cidadao);
 
     if (!description || !longitude || !latitude || !cidadao || !file) {
       return res.status(400).json({ msg: 'Por favor, preencha todos os campos obrigatórios!' });
       console.log(file, description, longitude, latitude, cidadao);
-
     }
 
-    // O caminho da imagem agora será acessado diretamente
-    const foco = {
+    const novoFoco = {
       description,
       longitude,
       latitude,
-      image: fimage,
+      image: imageFile,
       cidadao,
     };
 
-    await file.save()
-    const response = await FocoModel.create(foco);
+   //const response = await FocoModel.create(foco);
 
-    res.status(201).json({ response, msg: 'Foco criado com sucesso!' });
-    console.log('Foco criado com sucesso!');
+    await novoFoco.save();
+    res.status(201).json({ message: 'Foco cadastrado com sucesso!', foco: novoFoco });
   } catch (error) {
     console.log(`Erro ao cadastrar foco: ${error}`);
-    return res.status(500).json("Erro ao cadastrar foco!");
-  }
+    res.status(500).json({ message: 'Erro ao cadastrar foco.', error: error.message });  }
 };
 
 const getAllFoco = async (req, res) => {

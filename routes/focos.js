@@ -1,8 +1,7 @@
 const express = require("express");
 const routes = express.Router()
 const focoController = require("../controllers/focoController");
-
-const upload = require("../config/multer");
+const upload = require('../middleware/upload');
 
 routes.post("/focos", upload.single("file"),  focoController.createFoco);
 routes.get("/focos", focoController.getAllFoco);
