@@ -2,7 +2,9 @@ const express = require("express");
 const routes = express.Router()
 const focoController = require("../controllers/focoController");
 
-routes.post("/focos", focoController.createFoco);
+const upload = require("../config/multer");
+
+routes.post("/focos", upload.single("file"),  focoController.createFoco);
 routes.get("/focos", focoController.getAllFoco);
 routes.get("/focos/:id", focoController.getOneFoco);
 routes.delete("/focos/:id", focoController.deleteFoco);

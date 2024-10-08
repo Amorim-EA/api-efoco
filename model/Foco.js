@@ -1,48 +1,38 @@
 const mongoose = require("mongoose");
 const { Schema } = mongoose;
 
-// Entender como vai ficar a localização e a imagem...
 const focoSchema = new Schema({
   description: { 
-   type: String,
-   required: true
-  },
-  localization: {
-    longitude: { 
-      type: String,
-      required: true
-    },
-    latitude: { 
-      type: String,
-      required: true
-    }
-  },
-  image:[
-    { 
-      src: {
-        type: String,
-        required: true
-      }
-    }
-  ],
-  cidadao: {
     type: String,
-    required: true
+    required: true,
   },
-  agente: {
-    type: String,
-    required: true
-  }, 
-  status: {
-   type: String,
-   required: true
+  longitude: { 
+    type: String, // coordenadas numéricas?
+    required: true,
   },
-  acao: {
+  latitude: { 
+    type: String, // coordenadas numéricas?
+    required: true,
+  },
+  image: {
+    type: String, 
+    required: true,
+  },
+  cidadao: { 
     type: String,
-    required: true
+    required: true,
+  },
+  status: { 
+    type: String,
+    default: 'aberto',
+  },
+  agente: { 
+    type: String,
+  },
+  acao: { 
+    type: String,
   }
-},{ timestamps: true }
-);
+}, { timestamps: true });
 
 const Foco = mongoose.model("Foco", focoSchema);
 module.exports = Foco;

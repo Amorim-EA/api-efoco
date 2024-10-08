@@ -21,7 +21,7 @@ const userSchema = new Schema({
     unique: true 
   },
   type: { 
-    type: Boolean, 
+    type: String, 
     default: 'cidadao'
   },
   solicited: { 

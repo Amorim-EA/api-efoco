@@ -43,7 +43,7 @@ const changeToAgent = async (req, res) => {
             { email: email },
             { type: 'agente' }
         );
-        res.status(200).json({ msg: 'Usuário atualizado para agente!' });
+        res.status(200).json({ result, msg: 'Usuário atualizado para agente!' });
         console.log('Usuário atualizado com sucesso!');
 
     } catch (error) {
@@ -66,18 +66,22 @@ const authenticatedUser = async (req, res) => {
         
         if (isPwdValid) {
             const token = jwt.sign({ id: userOfAuth._id }, secret, { expiresIn: 86400 });
-            res.cookie('token', token, { httpOnly: true }).json({
+            const userRetorno = {
                 name: userOfAuth.name,
                 email: userOfAuth.email,
+                type: userOfAuth.type,
                 token
-            });
-            console.log({ message: 'Usuário autenticado com sucesso' });
+            };
+
+            res.cookie('token', token, { httpOnly: true });
+            console.log({ message: 'Autenticação completa' });
+            return res.status(200).json(userRetorno);
         } else {
-            res.status(401).json({ message: 'Senha incorreta!' });
+            console.log({ message: 'Senha incorreta!' });
         }
     } catch (error) {
-        console.log({ message: 'Erro na autenticação' });
-        res.status(500).json({ message: 'Erro na autenticação!' });
+        console.error('Erro na autenticação:', error);
+        return res.status(500).json({ message: 'Erro na autenticação!' });
     }
 };
 
