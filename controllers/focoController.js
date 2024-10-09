@@ -76,29 +76,34 @@ const deleteFoco = async (req, res) => {
 
 const updateFoco = async (req, res) => {
   try {
-    const id = req.params.id;
-    const { description, acao, agente } = req.body;
-    
+    const { id } = req.params;  
+    const { acao, agente } = req.body;  
+
     const focoUpdate = {
-      description,
-      acao,
-      status: 'fechado', // Atualiza o status para fechado
+      status: 'fechado',
       agente,
+      acao
     };
+    console.log(focoUpdate)
 
-    const updatedFoco = await FocoModel.findByIdAndUpdate(id, focoUpdate, { new: true });
+    const response = await FocoModel.findByIdAndUpdate(
+      id,
+      { $set: focoUpdate },
+      { new: true }
+    );
 
-    if (!updatedFoco) {
+    if (!response) {
       console.log('Foco não encontrado para atualização');
       return res.status(404).json({ msg: 'Foco não encontrado!' });
     }
 
-    console.log('Foco atualizado com sucesso!', updatedFoco);
-    res.status(202).json({ updatedFoco, msg: 'Foco atualizado com sucesso!' });
+    console.log('Foco atualizado com sucesso!', response);
+    res.status(202).json({ response, msg: 'Foco atualizado com sucesso!' });
   } catch (error) {
     console.log(`Erro ao atualizar foco: ${error}`);
     res.status(500).json({ message: 'Erro ao atualizar foco!' });
   }
 };
+
 
 module.exports = { createFoco, getAllFoco, getOneFoco, deleteFoco, updateFoco };

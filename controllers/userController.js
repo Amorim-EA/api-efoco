@@ -26,7 +26,7 @@ const createUser = async (req, res) => {
 
 const requestAgent = async (req, res) => {
     try {
-        const users = await User.find({ solicitado: true, type: 'cidadao' });
+        const users = await User.find({ solicited: true , type: 'cidadao' });
         res.status(200).json({ users });
         console.log('Usuários buscados com sucesso!');
     } catch (error) {
