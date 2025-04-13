@@ -37,6 +37,19 @@ const getAllFoco = async (req, res) => {
   }
 };
 
+const getLenFocos = async (req, res) => {
+  try {
+    const focos = await FocoModel.find();
+    const focosPendentes = focos.filter(foco => foco.status === 'aberto')
+    
+    console.log(`Focos pendentes: ${focosPendentes.length}` );
+    res.status(200).json(focosPendentes.length);
+  } catch (error) {
+    console.log(`Erro ao buscar focos: ${error}`);
+    res.status(500).json({ message: 'Erro ao buscar todos os focos!' });
+  }
+};
+
 const getOneFoco = async (req, res) => {
   try {
     const id = req.params.id;
@@ -106,4 +119,4 @@ const updateFoco = async (req, res) => {
 };
 
 
-module.exports = { createFoco, getAllFoco, getOneFoco, deleteFoco, updateFoco };
+module.exports = { createFoco, getAllFoco, getLenFocos, getOneFoco, deleteFoco, updateFoco };

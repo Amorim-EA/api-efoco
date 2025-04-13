@@ -1,10 +1,11 @@
 const express = require("express");
 const routes = express.Router()
 const userController = require("../controllers/userController");
+const auth = require('../middleware/auth');
 
-routes.route("/users").post(userController.createUser);
-routes.route("/users/auth").post(userController.authenticatedUser);
-routes.route("/users/request").get(userController.requestAgent);
-routes.route("/users/request").put(userController.changeToAgent);
+routes.post("/users", userController.createUser);
+routes.post("/users/auth", userController.authenticatedUser);
+routes.get("/users/request", auth, userController.requestAgent);
+routes.put("/users/request", auth, userController.changeToAgent);
 
 module.exports = routes;

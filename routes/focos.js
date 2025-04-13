@@ -3,11 +3,13 @@ const routes = express.Router()
 const focoController = require("../controllers/focoController");
 const upload = require('../middleware/upload');
 const path = require('path');
+const auth = require('../middleware/auth');
 
-routes.post("/focos", upload.single("imageFile"),  focoController.createFoco);
-routes.get("/focos", focoController.getAllFoco);
-routes.get("/focos/:id", focoController.getOneFoco);
-routes.get('/foco/image/:filename', (req, res) => {
+routes.post("/focos", auth, upload.single("imageFile"),  focoController.createFoco);
+routes.get("/focos", auth, focoController.getAllFoco);
+routes.get("/focosCad", auth, focoController.getLenFocos);
+routes.get("/focos/:id", auth, focoController.getOneFoco);
+routes.get('/foco/image/:filename', auth, (req, res) => {
   const filename = req.params.filename;
   const filePath = path.join(__dirname, '../uploads', filename); 
 
@@ -18,7 +20,7 @@ routes.get('/foco/image/:filename', (req, res) => {
     }
   });
 });
-routes.delete("/focos/:id", focoController.deleteFoco);
-routes.put("/focos/:id", focoController.updateFoco);
+routes.delete("/focos/:id", auth, focoController.deleteFoco);
+routes.put("/focos/:id", auth, focoController.updateFoco);
 
 module.exports = routes;

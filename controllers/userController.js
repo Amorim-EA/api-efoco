@@ -7,20 +7,33 @@ const createUser = async (req, res) => {
     try {
         const { name, password, email, solicited, cpf } = req.body;
 
-        const passwdCrypt = await bcrypt.hash(password, 7);
+        const hash = await bcrypt.hash(password, 7);
         const newUser = {
-             name: name,
-             email: email,
-             password: passwdCrypt,
-             cpf: cpf,
-             solicited: solicited || false
-          };
+            name,
+            email,
+            password: hash,
+            cpf,
+            solicited: solicited || false
+        };
+
         const addUser = await User.create(newUser);
-        res.status(201).json({ user: newUser, msg: 'Usuário criado!' });
+
+        res.status(201).json('Cadastro realizado com sucesso!');
         console.log('Usuário criado com sucesso!');
     } catch (error) {
-        console.log(`Erro ao cadastrar: ${error}`);
-        return res.status(400).json("Erro ao cadastrar usuário!");
+        const { email, cpf } = req.body;
+
+        const emailExists = await User.findOne({ email });
+        if (emailExists) {
+            return res.status(400).json('Email já cadastrado!');
+            console.log('Resultado do findOne (email):', emailExists);
+        }
+
+        const cpfExists = await User.findOne({ cpf });
+        if (cpfExists) {
+            return res.status(400).json('CPF já cadastrado');
+            console.log('Resultado do findOne (email):', cpfExists);
+        }
     }
 };
 
@@ -56,26 +69,24 @@ const changeToAgent = async (req, res) => {
 const authenticatedUser = async (req, res) => {
     try {
         const { email, password } = req.body;
-        const userOfAuth = await User.findOne({ email }).exec();
+        const userAutentication = await User.findOne({ email });
         
-        if (!userOfAuth) {
+        if (!userAutentication) {
             return res.status(401).json({ message: 'Usuário não encontrado!' });
         }
 
-        const isPwdValid = await bcrypt.compare(password, userOfAuth.password);
+        const passwordValidated = await bcrypt.compare(password, userAutentication.password);
         
-        if (isPwdValid) {
-            const token = jwt.sign({ id: userOfAuth._id }, secret, { expiresIn: 86400 });
-            const userRetorno = {
-                name: userOfAuth.name,
-                email: userOfAuth.email,
-                type: userOfAuth.type,
+        if (passwordValidated) {
+            const token = jwt.sign({ id: userAutentication._id }, secret);
+            const userAuthenticated = {
+                name: userAutentication.name,
+                email: userAutentication.email,
+                type: userAutentication.type,
                 token
             };
-
-            res.cookie('token', token, { httpOnly: true });
             console.log({ message: 'Autenticação completa' });
-            return res.status(200).json(userRetorno);
+            return res.status(200).json(userAuthenticated);
         } else {
             console.log({ message: 'Senha incorreta!' });
         }
